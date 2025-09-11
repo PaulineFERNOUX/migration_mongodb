@@ -18,7 +18,7 @@ df['Discharge Date'] = pd.to_datetime(df['Discharge Date'])
 documents = df.to_dict('records')
 
 # Insérer
-#collection.delete_many({})
+collection.delete_many({})
 collection.insert_many(documents)
 
 print(f"{len(documents)} documents insérés!")

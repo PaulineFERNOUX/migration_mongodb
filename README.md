@@ -13,6 +13,7 @@ Le projet suit une approche méthodique pour migrer des données de patients hos
 - **PyMongo** (driver MongoDB pour Python)
 - **Pandas** (traitement des données CSV)
 - **Poetry** (gestion des dépendances)
+- **pytest** (tests automatisés)
 
 ## Structure du projet
 mongodb_project/
@@ -26,7 +27,14 @@ mongodb_project/
 │ └── compare_csv_mongodb.py # Comparaison CSV vs MongoDB
 ├── src/
 │ └── mongodb_project/
-└── tests/
+├── tests/                    # Tests automatisés
+│   ├── test_connection.py   # Tests de connexion MongoDB
+│   ├── test_crud.py        # Tests des opérations CRUD
+│   ├── test_migration.py   # Tests de migration CSV → MongoDB
+│   ├── test_data_validation.py # Tests de validation des données
+│   ├── test_integration.py # Tests d'intégration complets
+│   └── README.md           # Guide des tests
+└── run_tests.py            # Script pour lancer les tests
 
 ## Étapes du projet
 
@@ -120,6 +128,35 @@ poetry run python scripts/compare_csv_mongodb.py
 
 **Résultat attendu :** Toutes les comparaisons doivent être identiques.
 
+## Tests automatisés
+
+Le projet inclut une suite de tests automatisés pour valider le bon fonctionnement de chaque composant.
+
+### Installation des tests
+```bash
+poetry add --group dev pytest
+```
+
+### Lancement des tests
+```bash
+# Tous les tests
+poetry run pytest
+
+# Script interactif
+python run_tests.py
+```
+
+### Types de tests
+
+- **Tests de connexion** : Vérification de la connexion à MongoDB
+- **Tests CRUD** : Validation des opérations de base (créer, lire, modifier, supprimer)
+- **Tests de migration** : Vérification de la migration CSV → MongoDB
+- **Tests de validation** : Contrôle de la structure et des types de données
+- **Tests d'intégration** : Validation du workflow complet
+
+### Guide des tests
+Consultez `tests/README.md` pour plus de détails sur les tests disponibles.
+
 ## Données traitées
 
 Le dataset contient des informations sur **55,000+ patients hospitaliers** avec les champs suivants :
@@ -155,6 +192,8 @@ Chaque script inclut :
 # Installation des dépendances
 poetry install
 
+# Installation des tests (optionnel)
+poetry add --group dev pytest
 ```
 
 ### Variables d'environnement
@@ -173,6 +212,7 @@ URI = os.getenv("MONGODB_URI", "votre_uri_par_défaut")
 - Toutes les opérations CRUD fonctionnelles
 - Intégrité des données validée
 - Migration réussie sans perte de données
+- Tests automatisés passent avec succès
 
 ## Objectifs pédagogiques
 
@@ -182,6 +222,7 @@ Ce projet démontre :
 - La gestion des erreurs en Python
 - L'utilisation de MongoDB Atlas
 - Les bonnes pratiques de migration de données
+- L'écriture de tests automatisés simples et efficaces
 
 ---
 
