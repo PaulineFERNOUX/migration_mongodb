@@ -1,0 +1,6 @@
+﻿Name,Age,Gender,Blood Type,Medical Condition,Date of Admission,Doctor,Hospital,Insurance Provider,Billing Amount,Room Number,Admission Type,Discharge Date,Medication,Test Results
+Alice Smith,25,Female,O+,Fever,2024-01-15,Dr. Johnson,City Hospital,Blue Cross,1500.50,101,Urgent,2024-01-17,Paracetamol,Normal
+Bob Wilson,30,Male,A-,Broken Arm,2024-01-16,Dr. Brown,General Hospital,Medicare,2500.75,205,Elective,2024-01-18,Morphine,Abnormal
+Carol Davis,45,Female,AB+,Diabetes,2024-01-17,Dr. Lee,University Hospital,Private,3200.00,312,Urgent,2024-01-20,Insulin,Normal
+David Miller,60,Male,B-,Heart Attack,2024-01-18,Dr. Garcia,Emergency Center,Medicaid,8500.25,401,Emergency,2024-01-22,Aspirin,Critical
+Emma Taylor,35,Female,O-,Pregnancy,2024-01-19,Dr. Williams,Maternity Ward,Blue Shield,4200.00,501,Elective,2024-01-21,Prenatal Vitamins,Normal

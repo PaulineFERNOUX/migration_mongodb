@@ -1,9 +1,9 @@
 [project]
 name = "mongodb-project"
 version = "0.1.0"
-description = ""
+description = "Migration de données médicales CSV vers MongoDB Atlas"
 authors = [
-    {name = "Your Name",email = "you@example.com"}
+    {name = "Pauline", email = "pauline.fernouxwork@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
@@ -15,7 +15,6 @@ dependencies = [
 
 [tool.poetry]
 packages = [{include = "mongodb_project", from = "src"}]
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.2"

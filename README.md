@@ -2,9 +2,6 @@
 
 Ce projet démontre la migration de données médicales d'un fichier CSV vers MongoDB Atlas, avec des tests d'intégrité complets.
 
-## Vue d'ensemble
-
-Le projet suit une approche méthodique pour migrer des données de patients hospitaliers vers MongoDB, en s'assurant de l'intégrité des données à chaque étape.
 
 ## Technologies utilisées
 
@@ -23,11 +20,8 @@ mongodb_project/
 │ ├── migration.py # Migration CSV → MongoDB
 ├── src/
 │ └── mongodb_project/
-├── tests/                  # Tests automatisés
-   ├── test_connection.py  # Tests de connexion MongoDB
-   ├── test_crud.py        # Tests des opérations CRUD
+├── tests/                 # Tests automatisés
    ├── test_migration.py   # Tests de migration CSV → MongoDB
-   ├── test_data_validation.py # Tests de validation des données
    ├── test_integration.py # Tests d'intégration complets
    └── README.md           # Guide des tests
 
@@ -48,7 +42,7 @@ poetry run pytest
 ```
 
 ##Structure
-- `scripts/migration.py` : Script principal de migration (étapes claires)
+- `scripts/migration.py` : Script principal de migration
 - `data/` : Données source (CSV)
 - `tests/` : Tests automatisés
 

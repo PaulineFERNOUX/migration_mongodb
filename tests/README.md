@@ -1,108 +1,57 @@
-# Tests MongoDB - Guide Simple
+# Tests MongoDB
 
-Ce guide explique comment utiliser les tests de manière simple et accessible.
+Ce dossier contient les tests pour vérifier le bon fonctionnement de la migration CSV vers MongoDB.
 
-## 🚀 Installation
+## Installation
 
 ```bash
-# Installer pytest
-poetry add --group dev pytest
-
-# Lancer tous les tests
-poetry run pytest
+poetry install
 ```
 
-## 📁 Fichiers de Test
+## Exécution des tests
 
-- `test_connection.py` - Tests de connexion à MongoDB
-- `test_crud.py` - Tests des opérations de base (créer, lire, modifier, supprimer)
-- `test_migration.py` - Tests de migration CSV vers MongoDB
-- `test_data_validation.py` - Tests de validation des données
-- `test_integration.py` - Tests d'intégration complets
-
-## 🎯 Commandes Simples
-
-### Lancer tous les tests
+### Tous les tests
 ```bash
 poetry run pytest
 ```
 
-### Lancer un fichier spécifique
-```bash
-poetry run pytest tests/test_connection.py
-```
-
-### Lancer avec plus de détails
+### Tests avec détails
 ```bash
 poetry run pytest -v
 ```
 
-### Utiliser le script interactif
+### Un fichier spécifique
 ```bash
-python run_tests.py
+poetry run pytest tests/test_migration.py
 ```
 
-## 📝 Exemple de Test
+## Fichiers de test
 
-```python
-def test_insert_patient(test_collection):
-    """Test d'insertion d'un patient"""
-    patient = {
-        "name": "Test Patient",
-        "age": 30,
-        "gender": "Male"
-    }
-    
-    result = test_collection.insert_one(patient)
-    assert result.inserted_id is not None
-```
+- `conftest.py` - Configuration partagée (fixtures MongoDB)
+- `test_migration.py` - Tests de migration CSV vers MongoDB
+- `test_integration.py` - Tests du workflow complet
 
-## ✅ Que Testent les Tests ?
+## Que testent les tests ?
 
-### Tests de Connexion
-- ✅ Connexion à MongoDB
-- ✅ Création de base de données
-- ✅ Création de collection
+### test_migration.py
+- Existence du fichier CSV
+- Chargement correct du CSV
+- Migration des données vers MongoDB
 
-### Tests CRUD
-- ✅ Insérer un patient
-- ✅ Rechercher un patient
-- ✅ Modifier un patient
-- ✅ Supprimer un patient
+### test_integration.py
+- Workflow complet CSV vers MongoDB
+- Insertion en masse des données
+- Requêtes de recherche après migration
 
-### Tests de Migration
-- ✅ Le fichier CSV existe
-- ✅ Le CSV se charge correctement
-- ✅ Les données peuvent être insérées en MongoDB
+## Configuration
 
-### Tests de Validation
-- ✅ Structure des données
-- ✅ Types de données corrects
+Les tests utilisent une base de données de test séparée (`test_healthcare`) qui est automatiquement nettoyée après chaque test.
 
-### Tests d'Intégration
-- ✅ Workflow complet CSV → MongoDB
-- ✅ Requêtes simples fonctionnent
+L'URI de connexion MongoDB est définie dans `conftest.py`.
 
-## 🚨 En Cas de Problème
+## En cas de problème
 
-### Erreur de connexion
-- Vérifiez votre connexion internet
-- Vérifiez l'URI MongoDB dans `conftest.py`
-
-### Tests qui échouent
-- Utilisez `-v` pour plus de détails
-- Vérifiez que le fichier CSV existe dans `data/`
-
-### Installation
-- Assurez-vous d'avoir fait `poetry install`
-- Vérifiez que pytest est installé
-
-## 🎯 Objectif
-
-Ces tests vérifient que votre projet MongoDB fonctionne correctement :
-- La connexion à la base de données
-- Les opérations de base (CRUD)
-- La migration des données CSV
-- L'intégrité des données
-
-C'est tout ! Simple et efficace. 🎉
+1. Vérifiez que le fichier `data/healthcare_dataset.csv` existe
+2. Vérifiez votre connexion internet
+3. Vérifiez l'URI MongoDB dans `conftest.py`
+4. Utilisez `poetry run pytest -v` pour plus de détails sur les erreurs
