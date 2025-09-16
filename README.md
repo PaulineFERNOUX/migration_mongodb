@@ -20,211 +20,44 @@ mongodb_project/
 ├── data/
 │ └── healthcare_dataset.csv # Dataset source (55k+ patients)
 ├── scripts/
-│ ├── quickstart.py # Création de la base MongoDB
-│ ├── crud_operations.py # Tests des opérations CRUD
-│ ├── analysis_csv_data.py # Analyse du fichier CSV
 │ ├── migration.py # Migration CSV → MongoDB
-│ └── compare_csv_mongodb.py # Comparaison CSV vs MongoDB
 ├── src/
 │ └── mongodb_project/
-├── tests/                    # Tests automatisés
-│   ├── test_connection.py   # Tests de connexion MongoDB
-│   ├── test_crud.py        # Tests des opérations CRUD
-│   ├── test_migration.py   # Tests de migration CSV → MongoDB
-│   ├── test_data_validation.py # Tests de validation des données
-│   ├── test_integration.py # Tests d'intégration complets
-│   └── README.md           # Guide des tests
-└── run_tests.py            # Script pour lancer les tests
+├── tests/                  # Tests automatisés
+   ├── test_connection.py  # Tests de connexion MongoDB
+   ├── test_crud.py        # Tests des opérations CRUD
+   ├── test_migration.py   # Tests de migration CSV → MongoDB
+   ├── test_data_validation.py # Tests de validation des données
+   ├── test_integration.py # Tests d'intégration complets
+   └── README.md           # Guide des tests
 
-## Étapes du projet
 
-### Étape 1 : Configuration de MongoDB Atlas
+##Objectif
+Migration des données de santé d'un fichier CSV vers MongoDB.
 
-**Script :** `scripts/quickstart.py`
+##Utilisation
 
-Cette étape initialise la base de données MongoDB Atlas et teste la connexion en insérant un patient de test.
-
-```bash
-poetry run python scripts/quickstart.py
-```
-
-**Ce qui se passe :**
-- Connexion à MongoDB Atlas
-- Création de la base `healthcare`
-- Création de la collection `admission_data`
-- Insertion d'un patient de test (Bobby Jackson)
-- Vérification de l'insertion
-
-**Résultat attendu :** Affichage du document inséré avec toutes ses propriétés.
-
-### Étape 2 : Tests des opérations CRUD
-
-**Script :** `scripts/crud_operations.py`
-
-Cette étape valide que toutes les opérations de base fonctionnent correctement.
-
-```bash
-poetry run python scripts/crud_operations.py
-```
-
-**Opérations testées :**
-- **CREATE** : Insertion de plusieurs patients
-- **READ** : Recherche d'un patient spécifique
-- **UPDATE** : Modification de l'âge d'un patient
-- **DELETE** : Suppression d'un patient
-
-**Résultat attendu :** Confirmation que toutes les opérations CRUD fonctionnent.
-
-### Étape 3 : Analyse du fichier CSV
-
-**Script :** `scripts/analysis_csv_data.py`
-
-Cette étape analyse le fichier source pour comprendre la structure des données et identifier les problèmes potentiels.
-
-```bash
-poetry run python scripts/analysis_csv_data.py
-```
-
-**Analyses effectuées :**
-- **Structure** : Nombre de lignes, colonnes, types de données
-- **Valeurs manquantes** : Identification des colonnes avec des données manquantes
-- **Âges** : Min, max
-- **Genres** : Valeurs uniques présentes
-- **Groupes sanguins** : Valeurs uniques présentes
-
-### Étape 4 : Migration des données
-
-**Script :** `scripts/migration.py`
-
-Cette étape migre toutes les données du CSV vers MongoDB.
-
+### Migration
 ```bash
 poetry run python scripts/migration.py
 ```
 
-**Processus de migration :**
-- Chargement du fichier CSV (55k+ patients)
-- Conversion des dates au format datetime
-- Transformation en documents MongoDB
-- Suppression des données existantes
-- Insertion par lots pour optimiser les performances
-
-**Résultat attendu :** Confirmation de l'insertion de tous les documents.
-
-### Étape 5 : Comparaison et validation
-
-**Script :** `scripts/compare_csv_mongodb.py`
-
-Cette étape finale compare les données source (CSV) avec les données migrées (MongoDB) pour s'assurer de l'intégrité.
-
+### Tests
 ```bash
-poetry run python scripts/compare_csv_mongodb.py
-```
-
-**Comparaisons effectuées :**
-- **Nombre de documents** : CSV vs MongoDB
-- **Âges** : Min/max identiques
-- **Échantillon de noms** : Vérification de la cohérence
-
-**Résultat attendu :** Toutes les comparaisons doivent être identiques.
-
-## Tests automatisés
-
-Le projet inclut une suite de tests automatisés pour valider le bon fonctionnement de chaque composant.
-
-### Installation des tests
-```bash
-poetry add --group dev pytest
-```
-
-### Lancement des tests
-```bash
-# Tous les tests
 poetry run pytest
-
-# Script interactif
-python run_tests.py
 ```
 
-### Types de tests
+##Structure
+- `scripts/migration.py` : Script principal de migration (étapes claires)
+- `data/` : Données source (CSV)
+- `tests/` : Tests automatisés
 
-- **Tests de connexion** : Vérification de la connexion à MongoDB
-- **Tests CRUD** : Validation des opérations de base (créer, lire, modifier, supprimer)
-- **Tests de migration** : Vérification de la migration CSV → MongoDB
-- **Tests de validation** : Contrôle de la structure et des types de données
-- **Tests d'intégration** : Validation du workflow complet
-
-### Guide des tests
-Consultez `tests/README.md` pour plus de détails sur les tests disponibles.
-
-## Données traitées
-
-Le dataset contient des informations sur **55,000+ patients hospitaliers** avec les champs suivants :
-
-- **Identité** : Name, Age, Gender
-- **Médical** : Blood Type, Medical Condition, Medication, Test Results
-- **Hospitalisation** : Date of Admission, Discharge Date, Admission Type
-- **Administratif** : Doctor, Hospital, Insurance Provider, Billing Amount, Room Number
-
-## Tests d'intégrité
-
-Le projet implémente plusieurs niveaux de validation :
-
-1. **Validation de structure** : Vérification des champs requis
-2. **Validation de types** : Contrôle des types de données
-3. **Validation de cohérence** : Vérification des règles métier
-4. **Validation de complétude** : Détection des valeurs manquantes
-5. **Validation de migration** : Comparaison avant/après
-
-## Gestion des erreurs
-
-Chaque script inclut :
-- Gestion des exceptions
-- Messages d'erreur explicites
-- Fermeture propre des connexions
-- Validation des données avant insertion
-
-
-## Configuration
-
-### Prérequis
-```bash
-# Installation des dépendances
-poetry install
-
-# Installation des tests (optionnel)
-poetry add --group dev pytest
-```
-
-### Variables d'environnement
-Les scripts utilisent une URI MongoDB Atlas hardcodée. Pour la production, utilisez des variables d'environnement :
-
-```python
-import os
-URI = os.getenv("MONGODB_URI", "votre_uri_par_défaut")
-```
-
-## Résultats attendus
-
-### Après l'exécution complète :
-- Base de données `healthcare` créée
-- Collection `admission_data` avec 55k+ documents
-- Toutes les opérations CRUD fonctionnelles
-- Intégrité des données validée
-- Migration réussie sans perte de données
-- Tests automatisés passent avec succès
-
-## Objectifs pédagogiques
-
-Ce projet démontre :
-- La migration de données relationnelles vers NoSQL
-- Les tests d'intégrité des données
-- La gestion des erreurs en Python
-- L'utilisation de MongoDB Atlas
-- Les bonnes pratiques de migration de données
-- L'écriture de tests automatisés simples et efficaces
-
----
+##Fichiers d'apprentissage
+Les fichiers d'entraînement sont disponibles dans la branche `learning` :
+- `scripts/quickstart.py` : Test de connexion
+- `scripts/analysis_csv_data.py` : Analyse des données CSV
+- `scripts/compare_csv_mongodb.py` : Comparaison CSV vs MongoDB
+- `scripts/crud_operations.py` : Opérations CRUD de base
 
 **Auteur :** Pauline  
 **Formation :** Projet 5 - MongoDB  
