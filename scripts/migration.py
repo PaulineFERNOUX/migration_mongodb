@@ -7,19 +7,28 @@ client = MongoClient(URI)
 db = client["healthcare"]
 collection = db["admission_data"]
 
+print("Connexion à MongoDB, début de la migration CSV vers MongoDB")
+
+#1- Charger le CSV
 print("Chargement du CSV")
 df = pd.read_csv("data/healthcare_dataset.csv")
+print(f"CSV chargé avec {len(df)} lignes")
 
-# Convertir les dates
+#2- Convertir les dates
+print("Conversion des dates")
 df['Date of Admission'] = pd.to_datetime(df['Date of Admission'])
 df['Discharge Date'] = pd.to_datetime(df['Discharge Date'])
-
-# Convertir en dictionnaires
 documents = df.to_dict('records')
 
-# Insérer
+#3- Supprimer les documents existants
+print("Suppression des documents existants")
 collection.delete_many({})
-collection.insert_many(documents)
 
+#4- Insérer les documents
+print("Insertion des documents")
+collection.insert_many(documents)
 print(f"{len(documents)} documents insérés!")
+print("Migration terminée")
+
+
 client.close()
