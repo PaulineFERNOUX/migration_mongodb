@@ -27,3 +27,4 @@ def test_database(mongodb_client):
 def test_collection(test_database):
     """Collection de test"""
     return test_database["test_admission_data"]
+
