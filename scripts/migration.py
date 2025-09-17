@@ -1,8 +1,8 @@
 import pandas as pd
 from pymongo import MongoClient
+import os
 
-# Configuration
-URI = "mongodb+srv://pauline:Pococo2002@cluster0.iz1s009.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+URI = os.getenv('MONGODB_URI', 'mongodb://root:example@mongodb:27017/admin')
 client = MongoClient(URI)
 db = client["healthcare"]
 collection = db["admission_data"]
@@ -29,6 +29,5 @@ print("Insertion des documents")
 collection.insert_many(documents)
 print(f"{len(documents)} documents insérés!")
 print("Migration terminée")
-
 
 client.close()

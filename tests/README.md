@@ -29,19 +29,21 @@ poetry run pytest tests/test_migration.py
 
 - `conftest.py` - Configuration partagée (fixtures MongoDB)
 - `test_migration.py` - Tests de migration CSV vers MongoDB
-- `test_integration.py` - Tests du workflow complet
+- `test_migration_csv_test.py` - Tests avec CSV de test (5 patients)
 
 ## Que testent les tests ?
 
 ### test_migration.py
 - Existence du fichier CSV
 - Chargement correct du CSV
+- Conversion des dates
 - Migration des données vers MongoDB
 
-### test_integration.py
-- Workflow complet CSV vers MongoDB
-- Insertion en masse des données
-- Requêtes de recherche après migration
+### test_migration_csv_test.py
+- Tests avec données contrôlées (5 patients)
+- Vérification de patients spécifiques
+- Tests de requêtes variées
+- Tests de recherche par dates
 
 ## Configuration
 
@@ -51,7 +53,7 @@ L'URI de connexion MongoDB est définie dans `conftest.py`.
 
 ## En cas de problème
 
-1. Vérifiez que le fichier `data/healthcare_dataset.csv` existe
+1. Vérifiez que les fichiers CSV existent dans `data/`
 2. Vérifiez votre connexion internet
 3. Vérifiez l'URI MongoDB dans `conftest.py`
 4. Utilisez `poetry run pytest -v` pour plus de détails sur les erreurs
