@@ -18,13 +18,23 @@ services:
       retries: 5
       start_period: 30s
 
-  migration:
+  init-auth:
     build: .
     depends_on:
       mongodb:
         condition: service_healthy
     environment:
       MONGODB_URI: mongodb://root:example@mongodb:27017/admin
+    command: python scripts/init_auth.py
+    volumes:
+      - ./data:/app/data
+
+  migration:
+    build: .
+    depends_on:
+      - init-auth
+    environment:
+      MONGODB_URI: mongodb://admin_user:admin_password_2025@mongodb:27017/healthcare
     volumes:
       - ./data:/app/data
 

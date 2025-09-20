@@ -1,57 +1,63 @@
 # Projet MongoDB - Migration de Données Médicales
 
-Ce projet démontre la migration de données médicales d'un fichier CSV vers MongoDB Atlas, avec des tests d'intégrité complets.
+Migration de données médicales d'un fichier CSV vers MongoDB avec Docker et authentification.
 
 ## Technologies utilisées
 
 - **Python 3.12+**
-- **MongoDB Atlas** (base de données cloud)
-- **PyMongo** (driver MongoDB pour Python)
-- **Pandas** (traitement des données CSV)
-- **Poetry** (gestion des dépendances)
-- **pytest** (tests automatisés)
+- **MongoDB** (Docker)
+- **PyMongo** (driver MongoDB)
+- **Pandas** (traitement CSV)
+- **Poetry** (dépendances)
+- **pytest** (tests)
 
 ## Structure du projet
 
 mongodb_project/
 ├── data/
-│ ├── healthcare_dataset.csv # Dataset source (55k+ patients)
-│ └── test_healthcare_data.csv # Dataset de test (5 patients)
+│   ├── healthcare_dataset.csv      # Dataset source (55k+ patients)
+│   └── test_healthcare_data.csv    # Dataset de test (5 patients)
 ├── scripts/
-│ └── migration.py # Migration CSV → MongoDB
+│   ├── migration.py                # Migration CSV → MongoDB
+│   └── init_auth.py                # Configuration authentification
 ├── tests/
-│ ├── conftest.py # Configuration des tests
-│ ├── test_migration.py # Tests de migration
-│ ├── test_migration_csv_test.py # Tests avec CSV de test
-│ └── README.md # Guide des tests
-├── pyproject.toml # Configuration Poetry
-└── README.md # Ce fichier
+│   ├── conftest.py                 # Configuration des tests
+│   ├── test_migration.py           # Tests de migration
+│   └── test_migration_csv_test.py  # Tests avec CSV de test
+├── docker-compose.yml              # Configuration Docker
+├── Dockerfile                      # Image Docker
+├── pyproject.toml                  # Configuration Poetry
+├── poetry.lock                     # Verrouillage des dépendances
+└── README.md                       # Ce fichier
 
 
 ## Objectif
 
-Migration des données de santé d'un fichier CSV vers MongoDB.
+Migration de données médicales CSV vers MongoDB avec Docker et système d'authentification.
+
+## Authentification
+
+- **Analyste** : `analyst_user` / `analyst_password_2025` (lecture seule)
+- **Admin** : `admin_user` / `admin_password_2025` (tous droits)
 
 ## Utilisation
 
-### Migration
+### Démarrage
 ```bash
-poetry run python scripts/migration.py
+# Démarrer MongoDB et migration
+docker-compose up
+
+# Tests
+python -m pytest tests/
 ```
 
-### Tests
+### Vérification
 ```bash
-poetry run pytest
+# Se connecter à MongoDB
+docker exec -it mongodb_project-mongodb-1 mongosh
+use healthcare
+db.admission_data.find().limit(5)
 ```
-
-## Fichiers d'apprentissage
-
-Les fichiers d'entraînement sont disponibles dans la branche `learning` :
-- `scripts/quickstart.py` : Test de connexion
-- `scripts/analysis_csv_data.py` : Analyse des données CSV
-- `scripts/compare_csv_mongodb.py` : Comparaison CSV vs MongoDB
-- `scripts/crud_operations.py` : Opérations CRUD de base
 
 **Auteur :** Pauline  
-**Formation :** Projet 5 - MongoDB  
-**Date :** 2025
+**Formation :** Projet 5 - MongoDB

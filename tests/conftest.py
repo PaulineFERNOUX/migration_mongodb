@@ -5,7 +5,8 @@ import os
 @pytest.fixture(scope="session")
 def mongodb_uri():
     """URI de connexion MongoDB pour les tests"""
-    return "mongodb+srv://pauline:Pococo2002@cluster0.iz1s009.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    # Utilise l'URI locale avec authentification
+    return os.getenv('MONGODB_URI', 'mongodb://admin_user:admin_password_2025@mongodb:27017/healthcare')
 
 @pytest.fixture(scope="session")
 def mongodb_client(mongodb_uri):
