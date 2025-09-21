@@ -29,6 +29,20 @@ services:
     volumes:
       - ./data:/app/data
 
+  test:
+    build: .
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      init-auth:
+        condition: service_completed_successfully
+    environment:
+      MONGODB_URI: mongodb://admin_user:admin_password_2025@mongodb:27017/healthcare
+    command: python -m pytest tests/
+    volumes:
+      - ./data:/app/data
+      - ./tests:/app/tests
+
   migration:
     build: .
     depends_on:
