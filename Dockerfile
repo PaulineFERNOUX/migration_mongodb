@@ -16,8 +16,8 @@ RUN pip install poetry
 # Configurer Poetry
 RUN poetry config virtualenvs.create false
 
-# Installer seulement les dépendances (pas le projet lui-même)
-RUN poetry install --only=main --no-root
+# Installer les dépendances poetry
+RUN poetry install --no-root
 
 # Copier le code source
 COPY . .

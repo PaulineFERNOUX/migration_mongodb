@@ -10,14 +10,11 @@ def create_roles_and_users():
     
     try:
         client = MongoClient(uri)
-        admin_db = client.admin
+        healthcare_db = client["healthcare"]
         
         print("Initialisation de l'authentification MongoDB...")
         
-        # 1. Création base de données healthcare
-        healthcare_db = client["healthcare"]
-        
-        # 2. Création des rôles
+        # Création des rôles
         print("Création des rôles")
         
         # Rôle : Lecture seule pour l'analyse
@@ -59,14 +56,14 @@ def create_roles_and_users():
         
         for role in roles_to_create:
             try:
-                admin_db.command("createRole", role["role"], privileges=role["privileges"], roles=role["roles"])
+                healthcare_db.command("createRole", role["role"], privileges=role["privileges"], roles=role["roles"])
             except Exception as e:
                 if "already exists" in str(e):
                     print(f"Rôle '{role['role']}' existe déjà")
                 else:
                     print(f"Erreur création rôle '{role['role']}': {e}")
         
-        # 3. Création des utilisateurs
+        # Création des utilisateurs
         print("Création des utilisateurs...")
         
         users_to_create = [
@@ -84,7 +81,7 @@ def create_roles_and_users():
         
         for user in users_to_create:
             try:
-                admin_db.command("createUser", user["user"], pwd=user["pwd"], roles=user["roles"])
+                healthcare_db.command("createUser", user["user"], pwd=user["pwd"], roles=user["roles"])
             except Exception as e:
                 if "already exists" in str(e):
                     print(f"Utilisateur '{user['user']}' existe déjà")

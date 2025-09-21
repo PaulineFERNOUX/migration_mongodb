@@ -54,9 +54,11 @@ python -m pytest tests/
 ### Vérification
 ```bash
 # Se connecter à MongoDB
-docker exec -it mongodb_project-mongodb-1 mongosh
+docker exec -it mongodb_project-mongodb-1 mongosh "mongodb://root:example@localhost:27017/admin"
 use healthcare
 db.admission_data.find().limit(5)
+
+db.runCommand({usersInfo: "analyst_user", showPrivileges: true})
 ```
 
 **Auteur :** Pauline  

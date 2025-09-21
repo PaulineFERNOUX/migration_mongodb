@@ -18,7 +18,7 @@ def mongodb_client(mongodb_uri):
 @pytest.fixture(scope="function")
 def test_database(mongodb_client):
     """Base de données de test (créée et supprimée pour chaque test)"""
-    db_name = "test_healthcare"
+    db_name = "healthcare"
     db = mongodb_client[db_name]
     yield db
     # Nettoyage après chaque test
