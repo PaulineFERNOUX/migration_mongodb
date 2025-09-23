@@ -36,7 +36,7 @@ services:
     depends_on:
       - init-auth
     environment:
-      MONGODB_URI: mongodb://admin_user:admin_password_2025@mongodb:27017/healthcare
+      MONGODB_URI: mongodb://root:example@mongodb:27017/admin
     command: poetry run pytest tests/ -v
     volumes:
       - ./tests:/app/tests

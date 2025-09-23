@@ -1,0 +1,73 @@
+"""
+Configuration pour l'authentification MongoDB
+Contient toutes les données statiques pour les rôles, utilisateurs et connexion
+"""
+
+# Configuration de connexion MongoDB
+MONGODB_CONFIG = {
+    "default_uri": "mongodb://root:example@mongodb:27017/admin",
+    "database_name": "healthcare",
+    "collection_name": "admission_data"
+}
+
+# Configuration des rôles
+ROLES_CONFIG = [
+    {
+        "role": "healthcare_analyst",
+        "privileges": [
+            {
+                "resource": {"db": "healthcare", "collection": "admission_data"},
+                "actions": ["find"]
+            },
+            {
+                "resource": {"db": "healthcare", "collection": "admission_data"},
+                "actions": ["listCollections", "listIndexes"]
+            }
+        ],
+        "roles": []
+    },
+    {
+        "role": "healthcare_admin",
+        "privileges": [
+            {
+                "resource": {"db": "healthcare", "collection": "admission_data"},
+                "actions": ["find", "insert", "update", "remove"]
+            },
+            {
+                "resource": {"db": "healthcare", "collection": ""},
+                "actions": ["listCollections", "listIndexes", "createCollection", "dropCollection", "dropDatabase"]
+            }
+        ],
+        "roles": []
+    }
+]
+
+# Configuration des utilisateurs
+USERS_CONFIG = [
+    {
+        "user": "analyst_user",
+        "pwd": "analyst_password_2025",
+        "roles": [{"role": "healthcare_analyst", "db": "healthcare"}]
+    },
+    {
+        "user": "admin_user",
+        "pwd": "admin_password_2025", 
+        "roles": [
+            {"role": "healthcare_admin", "db": "healthcare"},
+            {"role": "readWriteAnyDatabase", "db": "admin"}
+        ]
+    }
+]
+
+# Messages de l'application
+MESSAGES = {
+    "init_start": "Initialisation de l'authentification MongoDB...",
+    "creating_roles": "Création des rôles",
+    "creating_users": "Création des utilisateurs...",
+    "init_success": "Initialisation de l'authentification MongoDB terminée avec succès",
+    "role_exists": "Rôle '{role_name}' existe déjà",
+    "user_exists": "Utilisateur '{user_name}' existe déjà",
+    "role_error": "Erreur création rôle '{role_name}': {error}",
+    "user_error": "Erreur création utilisateur '{user_name}': {error}",
+    "init_error": "Erreur lors de l'initialisation: {error}"
+}

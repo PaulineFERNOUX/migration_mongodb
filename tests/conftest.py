@@ -5,8 +5,8 @@ import os
 @pytest.fixture(scope="session")
 def mongodb_uri():
     """URI de connexion MongoDB pour les tests"""
-    # Utilise l'URI locale avec authentification
-    return os.getenv('MONGODB_URI', 'mongodb://admin_user:admin_password_2025@mongodb:27017/healthcare')
+    # Utilise l'URI par défaut de configuration ou la variable d'environnement
+    return os.getenv('MONGODB_URI', 'mongodb://root:example@mongodb:27017/admin')
 
 @pytest.fixture(scope="session")
 def mongodb_client(mongodb_uri):
@@ -18,7 +18,7 @@ def mongodb_client(mongodb_uri):
 @pytest.fixture(scope="function")
 def test_database(mongodb_client):
     """Base de données de test (créée et supprimée pour chaque test)"""
-    db_name = "healthcare"
+    db_name = "healthcare_test"  # Base séparée pour les tests
     db = mongodb_client[db_name]
     yield db
     # Nettoyage après chaque test

@@ -22,5 +22,8 @@ RUN poetry install --no-root
 # Copier le code source
 COPY . .
 
+# Ajouter /app au PYTHONPATH pour que Python trouve le module config
+ENV PYTHONPATH=/app
+
 # Commande par défaut
 CMD ["python", "scripts/migration.py"]

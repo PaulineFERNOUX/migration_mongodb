@@ -1,96 +1,78 @@
 from pymongo import MongoClient
 import os
 import sys
+from config.auth_config import MONGODB_CONFIG, ROLES_CONFIG, USERS_CONFIG, MESSAGES
+
+
+def get_mongodb_uri():
+    """Récupère l'URI MongoDB depuis les variables d'environnement ou utilise la valeur par défaut"""
+    return os.getenv('MONGODB_URI', MONGODB_CONFIG["default_uri"])
+
+
+def create_role(client, role_config):
+    """Crée un rôle dans MongoDB"""
+    try:
+        client[MONGODB_CONFIG["database_name"]].command(
+            "createRole", 
+            role_config["role"], 
+            privileges=role_config["privileges"], 
+            roles=role_config["roles"]
+        )
+        return True
+    except Exception as e:
+        if "already exists" in str(e):
+            print(MESSAGES["role_exists"].format(role_name=role_config["role"]))
+            return True
+        else:
+            print(MESSAGES["role_error"].format(role_name=role_config["role"], error=e))
+            return False
+
+
+def create_user(client, user_config):
+    """Crée un utilisateur dans MongoDB"""
+    try:
+        client[MONGODB_CONFIG["database_name"]].command(
+            "createUser", 
+            user_config["user"], 
+            pwd=user_config["pwd"], 
+            roles=user_config["roles"]
+        )
+        return True
+    except Exception as e:
+        if "already exists" in str(e):
+            print(MESSAGES["user_exists"].format(user_name=user_config["user"]))
+            return True
+        else:
+            print(MESSAGES["user_error"].format(user_name=user_config["user"], error=e))
+            return False
+
 
 def create_roles_and_users():
     """Crée les rôles et utilisateurs pour le système de données médicales"""
     
-    # URI de connexion
-    uri = os.getenv('MONGODB_URI', 'mongodb://root:example@mongodb:27017/admin')
-    
     try:
-        client = MongoClient(uri)
-        healthcare_db = client["healthcare"]
+        client = MongoClient(get_mongodb_uri())
+        healthcare_db = client[MONGODB_CONFIG["database_name"]]
         
-        print("Initialisation de l'authentification MongoDB...")
+        print(MESSAGES["init_start"])
         
         # Création des rôles
-        print("Création des rôles")
-        
-        # Rôle : Lecture seule pour l'analyse
-        analyst_role = {
-            "role": "healthcare_analyst",
-            "privileges": [
-                {
-                    "resource": {"db": "healthcare", "collection": "admission_data"},
-                    "actions": ["find"]
-                },
-                {
-                    "resource": {"db": "healthcare", "collection": "admission_data"},
-                    "actions": ["listCollections", "listIndexes"]
-                }
-            ],
-            "roles": []
-        }
-        
-        
-        # Rôle : Admin pour les administrateurs système
-        admin_role = {
-            "role": "healthcare_admin",
-            "privileges": [
-                {
-                    "resource": {"db": "healthcare", "collection": "admission_data"},
-                    "actions": ["find", "insert", "update", "remove"]
-                },
-                {
-                    "resource": {"db": "healthcare", "collection": ""},
-                    "actions": ["listCollections", "listIndexes", "createCollection", "dropCollection"]
-                }
-            ],
-    "roles": []
-}
-        
-        
-        
-        roles_to_create = [analyst_role, admin_role]
-        
-        for role in roles_to_create:
-            try:
-                healthcare_db.command("createRole", role["role"], privileges=role["privileges"], roles=role["roles"])
-            except Exception as e:
-                if "already exists" in str(e):
-                    print(f"Rôle '{role['role']}' existe déjà")
-                else:
-                    print(f"Erreur création rôle '{role['role']}': {e}")
+        print(MESSAGES["creating_roles"])
+        roles_success = all(create_role(client, role) for role in ROLES_CONFIG)
         
         # Création des utilisateurs
-        print("Création des utilisateurs...")
+        print(MESSAGES["creating_users"])
+        users_success = all(create_user(client, user) for user in USERS_CONFIG)
         
-        users_to_create = [
-            {
-                "user": "analyst_user",
-                "pwd": "analyst_password_2025",
-                "roles": [{"role": "healthcare_analyst", "db": "healthcare"}]
-            },
-            {
-                "user": "admin_user",
-                "pwd": "admin_password_2025", 
-                "roles": [{"role": "healthcare_admin", "db": "healthcare"}]
-            }
-        ]
-        
-        for user in users_to_create:
-            try:
-                healthcare_db.command("createUser", user["user"], pwd=user["pwd"], roles=user["roles"])
-            except Exception as e:
-                if "already exists" in str(e):
-                    print(f"Utilisateur '{user['user']}' existe déjà")
-                else:
-                    print(f"Erreur création utilisateur '{user['user']}': {e}")
+        if roles_success and users_success:
+            print(MESSAGES["init_success"])
+            return True
+        return False
         
     except Exception as e:
-        print(f"Erreur lors de l'initialisation: {e}")
+        print(MESSAGES["init_error"].format(error=e))
         return False
+
 
 if __name__ == "__main__":
     success = create_roles_and_users()

@@ -2,6 +2,7 @@ import pandas as pd
 from pymongo import MongoClient
 import os
 import sys
+from config.auth_config import MONGODB_CONFIG
 
 def connect_to_mongodb():
     """Connexion sécurisée à MongoDB avec authentification"""
@@ -18,8 +19,8 @@ def connect_to_mongodb():
         sys.exit(1)
 
 client = connect_to_mongodb()
-db = client["healthcare"]
-collection = db["admission_data"]
+db = client[MONGODB_CONFIG["database_name"]]
+collection = db[MONGODB_CONFIG["collection_name"]]
 
 print("Connexion à MongoDB avec authentification, début de la migration CSV vers MongoDB")
 
