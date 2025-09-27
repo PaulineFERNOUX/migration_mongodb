@@ -167,6 +167,7 @@ docker exec -it mongodb_project-mongodb-1 mongosh "mongodb://root:example@localh
 
 # Utiliser la base healthcare
 use healthcare
+show collections
 
 # Vérifier les données
 db.admission_data.countDocuments()
