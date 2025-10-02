@@ -35,14 +35,19 @@ df['Date of Admission'] = pd.to_datetime(df['Date of Admission'])
 df['Discharge Date'] = pd.to_datetime(df['Discharge Date'])
 documents = df.to_dict('records')
 
-#3- Supprimer les documents existants
-print("Suppression des documents existants")
-collection.delete_many({})
 
-#4- Insérer les documents
-print("Insertion des documents")
-collection.insert_many(documents)
-print(f"{len(documents)} documents insérés!")
+#4- Insérer les documents par batch
+print("Insertion des documents par batch")
+batch_size = 1000
+total_inserted = 0
+
+for i in range(0, len(documents), batch_size):
+    batch = documents[i:i + batch_size]
+    collection.insert_many(batch)
+    total_inserted += len(batch)
+    print(f"Inséré {total_inserted}/{len(documents)} documents")
+
+print(f"{total_inserted} documents insérés!")
 print("Migration terminée")
 
 client.close()

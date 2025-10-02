@@ -2,12 +2,13 @@
 Configuration pour l'authentification MongoDB
 Contient toutes les données statiques pour les rôles, utilisateurs et connexion
 """
+import os
 
 # Configuration de connexion MongoDB
 MONGODB_CONFIG = {
-    "default_uri": "mongodb://root:example@mongodb:27017/admin",
-    "database_name": "healthcare",
-    "collection_name": "admission_data"
+    "default_uri": f"mongodb://{os.getenv('MONGO_ROOT_USERNAME', 'root')}:{os.getenv('MONGO_ROOT_PASSWORD', 'example')}@mongodb:27017/admin",
+    "database_name": os.getenv('MONGO_DATABASE', 'healthcare'),
+    "collection_name": os.getenv('MONGO_COLLECTION', 'admission_data')
 }
 
 # Configuration des rôles
@@ -16,11 +17,11 @@ ROLES_CONFIG = [
         "role": "healthcare_analyst",
         "privileges": [
             {
-                "resource": {"db": "healthcare", "collection": "admission_data"},
+                "resource": {"db": os.getenv('MONGO_DATABASE', 'healthcare'), "collection": os.getenv('MONGO_COLLECTION', 'admission_data')},
                 "actions": ["find"]
             },
             {
-                "resource": {"db": "healthcare", "collection": "admission_data"},
+                "resource": {"db": os.getenv('MONGO_DATABASE', 'healthcare'), "collection": os.getenv('MONGO_COLLECTION', 'admission_data')},
                 "actions": ["listCollections", "listIndexes"]
             }
         ],
@@ -30,11 +31,11 @@ ROLES_CONFIG = [
         "role": "healthcare_admin",
         "privileges": [
             {
-                "resource": {"db": "healthcare", "collection": "admission_data"},
+                "resource": {"db": os.getenv('MONGO_DATABASE', 'healthcare'), "collection": os.getenv('MONGO_COLLECTION', 'admission_data')},
                 "actions": ["find", "insert", "update", "remove"]
             },
             {
-                "resource": {"db": "healthcare", "collection": ""},
+                "resource": {"db": os.getenv('MONGO_DATABASE', 'healthcare'), "collection": ""},
                 "actions": ["listCollections", "listIndexes", "createCollection", "dropCollection", "dropDatabase"]
             }
         ],
@@ -45,15 +46,15 @@ ROLES_CONFIG = [
 # Configuration des utilisateurs
 USERS_CONFIG = [
     {
-        "user": "analyst_user",
-        "pwd": "analyst_password_2025",
-        "roles": [{"role": "healthcare_analyst", "db": "healthcare"}]
+        "user": os.getenv('MONGO_ANALYST_USER', 'analyst_user'),
+        "pwd": os.getenv('MONGO_ANALYST_PASSWORD', 'analyst_password_2025'),
+        "roles": [{"role": "healthcare_analyst", "db": os.getenv('MONGO_DATABASE', 'healthcare')}]
     },
     {
-        "user": "admin_user",
-        "pwd": "admin_password_2025", 
+        "user": os.getenv('MONGO_ADMIN_USER', 'admin_user'),
+        "pwd": os.getenv('MONGO_ADMIN_PASSWORD', 'admin_password_2025'), 
         "roles": [
-            {"role": "healthcare_admin", "db": "healthcare"},
+            {"role": "healthcare_admin", "db": os.getenv('MONGO_DATABASE', 'healthcare')},
             {"role": "readWriteAnyDatabase", "db": "admin"}
         ]
     }

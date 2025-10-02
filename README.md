@@ -27,14 +27,17 @@ mongodb_project/
 │   ├── healthcare_dataset.csv       # Dataset source (55k+ patients)
 │   └── test_healthcare_data.csv     # Dataset de test (5 patients)
 ├── scripts/
-│   ├── migration.py                 # Migration CSV → MongoDB
-│   └── init_auth.py                 # Refactorisé
+│   ├── migration.py                 # Migration CSV → MongoDB (avec batch)
+│   └── init_auth.py                 # Initialisation auth et rôles
 ├── tests/
 │   ├── __init__.py
 │   ├── conftest.py                  # Configuration tests (DB séparée)
 │   ├── test_01_migration_csv_test.py # Tests avec CSV de test
 │   └── test_02_migration.py         # Tests complets de migration
-├── docker-compose.yml               # Variables d'environnement unifiées
+├── .env                             # Variables d'environnement (sécurisé)
+├── .env.example                     # Template pour développeurs
+├── .gitignore                       # Exclusions Git
+├── docker-compose.yml               # Orchestration Docker
 ├── Dockerfile                       # Image Docker
 ├── pyproject.toml                   # Configuration Poetry
 ├── poetry.lock                      # Verrouillage des dépendances
@@ -43,11 +46,12 @@ mongodb_project/
 
 ## Objectifs du projet
 
-1. **Migration automatisée** : CSV → MongoDB via Docker
-2. **Sécurité** : Système d'authentification et de rôles
-3. **Scalabilité** : Architecture conteneurisée
-4. **Maintenabilité** : Configuration externalisée
+1. **Migration automatisée** : CSV → MongoDB via Docker avec insertion par batch
+2. **Sécurité** : Système d'authentification et de rôles avec variables d'environnement
+3. **Scalabilité** : Architecture conteneurisée et optimisée pour gros volumes
+4. **Maintenabilité** : Configuration externalisée et sécurisée
 5. **Qualité** : Tests automatisés complets
+6. **Historisation** : Préservation des données existantes lors des migrations
 
 ## Système d'authentification
 
@@ -72,11 +76,26 @@ mongodb_project/
 git clone <repo-url>
 cd mongodb_project
 
+# Configuration (première fois)
+cp .env.example .env
+
 # Démarrer tous les services (MongoDB + Migration + Tests)
 docker-compose up
 
 # Ou en arrière-plan
 docker-compose up -d
+```
+
+### Nettoyage pour redémarrer de zéro
+```bash
+# Arrêter les services
+docker-compose down
+
+# Supprimer les données MongoDB (pour repartir de zéro)
+docker volume rm mongodb_project_mongodb_data
+
+# Relancer
+docker-compose up
 ```
 
 ### Services Docker
@@ -100,14 +119,18 @@ docker-compose run test
 
 ### Variables d'environnement
 
-| Variable | Défaut | Description |
-|----------|--------|-------------|
-| `MONGODB_URI` | `mongodb://root:example@mongodb:27017/admin` | URI de connexion MongoDB |
+Le projet utilise des variables d'environnement pour sécuriser les mots de passe et faciliter la configuration.
+
+#### Fichiers de configuration
+- **`.env`** : Variables d'environnement (ne pas commiter)
+- **`.env.example`** : Template pour les autres développeurs
+
+
 
 ### Personnalisation
 
 Modifiez `config/auth_config.py` pour :
-- Changer les utilisateurs et mots de passe
+- Changer les utilisateurs et mots de passe (via variables d'environnement)
 - Modifier les permissions des rôles
 - Adapter les messages de l'application
 - Configurer les bases de données
@@ -162,12 +185,11 @@ poetry run pytest tests/ --cov=scripts
 
 ### Connexion MongoDB
 ```bash
-# Via Docker
+# Via Docker (utilise les variables d'environnement)
 docker exec -it mongodb_project-mongodb-1 mongosh "mongodb://root:example@localhost:27017/admin"
 
 # Utiliser la base healthcare
 use healthcare
-show collections
 
 # Vérifier les données
 db.admission_data.countDocuments()
@@ -187,12 +209,11 @@ mongosh "mongodb://analyst_user:analyst_password_2025@localhost:27017/healthcare
 mongosh "mongodb://admin_user:admin_password_2025@localhost:27017/healthcare"
 ```
 
-## Développement
+### Vérification de la migration 
+```bash
+# Vérifier le nombre total de documents
+db.admission_data.countDocuments()
 
-### Prérequis
-- Python 3.12+
-- Docker & Docker Compose
-- Poetry
 
 
 
